@@ -3,19 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "ts-mocha",
-    "start": "node ./bin/www"
+    "test": "ts-mocha --inspect-brk",
+    "start-mon": "nodemon ",
+    "start": "node --inspect=5858 ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
+    "express-http-proxy": "^1.6.0",
     "morgan": "~1.9.1",
     "ts-mocha": "^6.0.0",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "xmldom": "^0.3.0"
   },
   "devDependencies": {
     "mocha": "^7.1.0",
+    "nodemon": "^2.0.2",
     "typescript": "^3.8.3"
   }
 }
