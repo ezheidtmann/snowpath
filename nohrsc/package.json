@@ -1,0 +1,29 @@
+{
+  "name": "nohrsc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc --outDir build",
+    "test": "ts-mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/sphericalmercator": "^1.1.0",
+    "@mapbox/vector-tile": "^1.3.1",
+    "@types/geojson": "^7946.0.7",
+    "@types/node": "^13.9.0",
+    "canvas": "^2.6.1",
+    "cross-fetch": "^3.0.4",
+    "geojson-vt": "^3.2.1",
+    "vt-pbf": "^3.1.1",
+    "xmldom": "^0.3.0"
+  },
+  "devDependencies": {
+    "fetch-mock": "^9.2.1",
+    "mocha": "^7.1.0",
+    "ts-mocha": "^7.0.0",
+    "typescript": "^3.8.3"
+  }
+}
