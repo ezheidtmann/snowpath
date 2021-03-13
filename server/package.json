@@ -15,7 +15,7 @@
     "morgan": "~1.9.1",
     "ts-mocha": "^6.0.0",
     "xml-js": "^1.6.11",
-    "xmldom": "^0.3.0"
+    "xmldom": "^0.5.0"
   },
   "devDependencies": {
     "mocha": "^7.1.0",
