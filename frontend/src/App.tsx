@@ -13,7 +13,9 @@ function App() {
         height: '100%',
         width: '100%',
       }}
-        initialLng={-122} initialLat={45} initialZoom={8}></Map>
+        initialLng={-122} initialLat={45} initialZoom={8}>
+
+      </Map>
     </div>
   );
 }

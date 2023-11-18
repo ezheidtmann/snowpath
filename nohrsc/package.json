@@ -2,10 +2,10 @@
   "name": "nohrsc",
   "version": "1.0.0",
   "description": "",
-  "main": "build/index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "build": "tsc --outDir build",
-    "test": "ts-mocha"
+    "test": "ts-mocha -t 7000"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "xmldom": "^0.3.0"
   },
   "devDependencies": {
+    "@types/mapbox__sphericalmercator": "^1.2.3",
     "fetch-mock": "^9.2.1",
     "mocha": "^7.1.0",
     "ts-mocha": "^7.0.0",

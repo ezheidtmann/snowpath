@@ -14,12 +14,21 @@ function twoCharHex(n: number) {
     }
 }
 
+function rewriteUrl(url: string) {
+    if (url.startsWith("http://www.nohrsc.noaa.gov")) {
+        // hardcoded "HSTS policy" as of March 2021
+        return "https" + url.substring(4);
+    }
+    return url
+}
+
+
 export function toColorCode(rgba: Uint8ClampedArray) {
     return `#${twoCharHex(rgba[0])}${twoCharHex(rgba[1])}${twoCharHex(rgba[2])}`
 }
 
 export function getImageDataFromUrl(url: string): Promise<ImageData> {
-    return loadImage(url).then(img => {
+    return loadImage(rewriteUrl(url)).then(img => {
         let canvas = createCanvas(img.width, img.height);
         let ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
