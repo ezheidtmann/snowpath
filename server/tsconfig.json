@@ -2,19 +2,19 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "allowJs": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "pretty": true,
     "sourceMap": true,
-    "target": "es6",
+    "target": "ES2018",
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./"
+    "baseUrl": "./src"
   },
   "include": [
     "lib/**/*.ts",
     "src/**/*.ts"
-  ],
+, "src/rawRequest.mts"  ],
   "exclude": [
     "node_modules"
   ]

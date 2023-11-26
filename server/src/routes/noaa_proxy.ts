@@ -1,13 +1,15 @@
-import express from 'express';
-let router = express.Router();
-let proxy = require('express-http-proxy');
+import express from "express";
+import proxy from "express-http-proxy";
 
-router.use('/', proxy('https://www.nohrsc.noaa.gov', {
-
+const router = express.Router();
+router.use(
+  "/",
+  proxy("https://www.nohrsc.noaa.gov", {
     filter: function (req, res) {
-        return req.method == 'GET';
-    }
-}))
+      return req.method == "GET";
+    },
+  })
+);
 // https://www.nohrsc.noaa.gov/snow_model/GE/latest_nohrsc_nsm_link.kmz
 // http://www.nohrsc.noaa.gov/snow_model/GE/latest_nohrsc_nsm.kmz
 // http://www.nohrsc.noaa.gov//snow_model/GE/20200221/nsm_swe/nsm_swe_2020022105_R001C002_us.png
