@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { _maybeFetchRawRasterData, maybeFetchRawRasterData } from "cache.js";
 import { RawTarPathOpts } from "nohrsc";
 import pLimit from "p-limit";
