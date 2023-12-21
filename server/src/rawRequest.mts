@@ -143,34 +143,61 @@ type RasterDataOpts = {
 };
 
 export class RasterData {
+  /** raw buffer from NOHRSC (big-endian) */
   readonly buffer: Buffer;
   private dataView: DataView;
+  private int16array: Int16Array;
   private rows: number;
   private cols: number;
 
+  /**
+   * Make a decoder/encoder from big-endian buffer
+   */
   constructor({ buffer, rows, cols }: RasterDataOpts) {
-    this.buffer = "buffer" in buffer ? buffer : Buffer.from(buffer);
-    this.dataView = new DataView("buffer" in buffer ? buffer.buffer : buffer);
-    this.rows = rows;
-    this.cols = cols;
-    if (this.dataView.byteLength !== rows * cols * 2) {
+    const dataView = new DataView("buffer" in buffer ? buffer.buffer : buffer);
+    if (dataView.byteLength !== rows * cols * 2) {
       throw new Error(
-        `Invalid buffer size ${this.dataView.byteLength} for ${cols}x${rows} buffer`
+        `Invalid buffer size ${dataView.byteLength} for ${cols}x${rows} buffer`
       );
     }
+    const int16array = new Int16Array(rows * cols);
+    for (let col = 0; col < cols; ++col) {
+      for (let row = 0; row < rows; ++row) {
+        // https://nsidc.org/sites/default/files/g02158-v001-userguide_2_1.pdf
+        //
+        // The first value at (1,1) is the top-left corner of the array (NW corner
+        // in this context). The file is structured so that values are read across
+        // the rows. For example, the second value to be read would be the second
+        // column of the first row (2,1).
+        const index = row * cols * 2 + col * 2;
+        int16array[index] = dataView.getInt16(index, false);
+      }
+    }
+
+    this.dataView = dataView;
+    this.int16array = int16array;
+    this.buffer = "buffer" in buffer ? buffer : Buffer.from(buffer);
+    this.rows = rows;
+    this.cols = cols;
   }
 
   get(col: number, row: number) {
-    // https://nsidc.org/sites/default/files/g02158-v001-userguide_2_1.pdf
-    //
-    // The first value at (1,1) is the top-left corner of the array (NW corner
-    // in this context). The file is structured so that values are read across
-    // the rows. For example, the second value to be read would be the second
-    // column of the first row (2,1).
-    return this.dataView.getInt16(row * this.cols * 2 + col * 2, false);
+    if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
+      throw new Error(
+        `Cannot .get(${col}, ${row}) from ${this.cols}x${this.rows} buffer`
+      );
+    }
+    return this.int16array[row * this.cols + col];
   }
 
   set(col: number, row: number, value: number) {
+    if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
+      throw new Error(
+        `Cannot .set(${col}, ${row}) from ${this.cols}x${this.rows} buffer`
+      );
+    }
+
     this.dataView.setInt16(row * this.cols * 2 + col * 2, value, false);
+    this.int16array[row * this.cols + col] = value;
   }
 }
