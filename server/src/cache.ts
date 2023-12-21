@@ -6,10 +6,13 @@ import {
   parseProductMetadata,
 } from "./rawRequest.mjs";
 import { promisify } from "util";
-import fs, { write } from "fs";
+import fs from "fs";
+import { gunzip, gzip } from "zlib";
 
 const readFilePromise = promisify(fs.readFile);
 const writeFilePromise = promisify(fs.writeFile);
+const gunzipPromise = promisify(gunzip);
+const gzipPromise = promisify(gzip);
 
 const CACHE_DIR = process.env.SNOWPATH_CACHE ?? "/tmp/snowpath";
 
@@ -45,7 +48,7 @@ const avoidHerd = <ArgsT extends any[], RetT extends Promise<any>>(
   };
 };
 
-const _maybeFetchRawRasterData = async <P extends ProductName>({
+export const _maybeFetchRawRasterData = async <P extends ProductName>({
   path,
   products,
 }: FetchRawRasterDataOpts<P>) => {
@@ -126,10 +129,11 @@ const loadFromFileCacheOrFetch = async <P extends ProductName>({
 };
 
 const loadFromFileCache = async (key: string) => {
-  const buffer = await readFilePromise(`${CACHE_DIR}/${key}.dat`);
   const meta = JSON.parse(
     (await readFilePromise(`${CACHE_DIR}/${key}.json`)).toString("utf-8")
   );
+  const gzBuffer = await readFilePromise(`${CACHE_DIR}/${key}.dat.gz`);
+  const buffer = await gunzipPromise(gzBuffer);
   return new RasterData({
     buffer,
     rows: meta.rows,
@@ -139,7 +143,10 @@ const loadFromFileCache = async (key: string) => {
 
 const saveToFileCache = async (key: string, data: RasterData, meta: object) => {
   return Promise.all([
-    writeFilePromise(`${CACHE_DIR}/${key}.dat`, data.buffer),
+    writeFilePromise(
+      `${CACHE_DIR}/${key}.dat.gz`,
+      await gzipPromise(data.buffer)
+    ),
     writeFilePromise(
       `${CACHE_DIR}/${key}.json`,
       JSON.stringify(meta, null, "  ")

@@ -97,8 +97,14 @@ const checkMatches = (
   expected: Record<string, string>,
   actual: Record<string, string>
 ) => {
+  const numericMatch = (expected: string, actual: string) => {
+    // In practice the greatest diff we have seen is `-130.516666666662` when we
+    // expect `-130.516666666661`, which is a difference of just under 1e-12.
+    // But 1e-11 is also a tiny distance.
+    return Math.abs(parseFloat(expected) - parseFloat(actual)) < 1e-11;
+  };
   for (const [k, v] of Object.entries(expected)) {
-    if (actual[k] !== v) {
+    if (actual[k] !== v && !numericMatch(v, actual[k])) {
       console.log(`${k}: expected '${v}' actual '${actual[k]}'`);
       return false;
     }
