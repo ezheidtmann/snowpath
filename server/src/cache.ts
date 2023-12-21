@@ -16,6 +16,8 @@ const gzipPromise = promisify(gzip);
 
 const CACHE_DIR = process.env.SNOWPATH_CACHE ?? "/tmp/snowpath";
 
+console.info(`snowpath: using cache at ${CACHE_DIR}`);
+
 const memoryCache = new Map<string, RasterData>();
 
 const cacheKey = ({
