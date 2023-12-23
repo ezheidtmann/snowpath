@@ -1,0 +1,9 @@
+services:
+  server:
+    build: ./server/
+    environment:
+      PORT: "8000"
+
+    ports:
+      # HOST:CONTAINER
+      - 8001:8000

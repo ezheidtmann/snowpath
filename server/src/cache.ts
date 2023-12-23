@@ -1,4 +1,4 @@
-import { ProductName, RawTarPathOpts } from "nohrsc";
+import { ProductName, RawTarPathOpts } from "./nohrsc/rawRequest.js";
 import {
   FetchRawRasterDataOpts,
   RasterData,

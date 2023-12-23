@@ -5,7 +5,7 @@ import {
   RawTarPathOpts,
   ProductName,
   tarMemberPrefix,
-} from "nohrsc";
+} from "./nohrsc/rawRequest.js";
 import gunzip from "gunzip-maybe";
 
 const streamToBuffer = async (stream: NodeJS.ReadableStream): Promise<Buffer> =>
@@ -151,7 +151,7 @@ export class RasterData {
   private cols: number;
 
   /**
-   * Make a decoder/encoder from big-endian buffer
+   * Make a decoder from big-endian buffer
    */
   constructor({ buffer, rows, cols }: RasterDataOpts) {
     const dataView = new DataView("buffer" in buffer ? buffer.buffer : buffer);
@@ -160,6 +160,8 @@ export class RasterData {
         `Invalid buffer size ${dataView.byteLength} for ${cols}x${rows} buffer`
       );
     }
+
+    // convert to native endianness once for quickness
     const int16array = new Int16Array(rows * cols);
     for (let col = 0; col < cols; ++col) {
       for (let row = 0; row < rows; ++row) {
@@ -190,14 +192,14 @@ export class RasterData {
     return this.int16array[row * this.cols + col];
   }
 
-  set(col: number, row: number, value: number) {
-    if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
-      throw new Error(
-        `Cannot .set(${col}, ${row}) from ${this.cols}x${this.rows} buffer`
-      );
-    }
+  // set(col: number, row: number, value: number) {
+  //   if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
+  //     throw new Error(
+  //       `Cannot .set(${col}, ${row}) from ${this.cols}x${this.rows} buffer`
+  //     );
+  //   }
 
-    this.dataView.setInt16(row * this.cols * 2 + col * 2, value, false);
-    this.int16array[row * this.cols + col] = value;
-  }
+  //   this.dataView.setInt16(row * this.cols * 2 + col * 2, value, false);
+  //   this.int16array[row * this.cols + col] = value;
+  // }
 }

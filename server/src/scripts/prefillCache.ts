@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import { _maybeFetchRawRasterData, maybeFetchRawRasterData } from "cache.js";
-import { RawTarPathOpts } from "nohrsc";
+import { RawTarPathOpts } from "../nohrsc/rawRequest.js";
 import pLimit from "p-limit";
 
 const prefill = async () => {
