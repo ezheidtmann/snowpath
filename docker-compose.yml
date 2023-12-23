@@ -1,9 +1,14 @@
 services:
   server:
     build: ./server/
+    restart: always
     environment:
       PORT: "8000"
+      SNOWPATH_CACHE: "/cache"
+
+    volumes:
+      - /local/snowpath-cache/cache:/cache:rw
 
     ports:
       # HOST:CONTAINER
-      - 8001:8000
+      - 8082:8000
