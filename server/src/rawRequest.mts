@@ -171,8 +171,10 @@ export class RasterData {
         // in this context). The file is structured so that values are read across
         // the rows. For example, the second value to be read would be the second
         // column of the first row (2,1).
-        const index = row * cols * 2 + col * 2;
-        int16array[index] = dataView.getInt16(index, false);
+        int16array[row * cols + col] = dataView.getInt16(
+          row * cols * 2 + col * 2,
+          false
+        );
       }
     }
 
